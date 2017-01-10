@@ -1,0 +1,17 @@
+* Auto-completion and documentation look-up for LFE Lisp.
+
+I use Emacs with Prelude, so to use this file I
+
++ symlink it to my ~/.emacs.d/vendor folder
+
+#+BEGIN_EXAMPLE
+$ cd ~/.emacs.d/vendor/
+# replace YOUR_PATH with actual path
+$ ln -s YOUR_PATH/lfe-doc-finder/lfe-doc-finder.el .
+#+END_EXAMPLE
+
++ and require it in personal.el file.
+
+#+BEGIN_EXAMPLE
+(require 'lfe-doc-finder)
+#+END_EXAMPLE
