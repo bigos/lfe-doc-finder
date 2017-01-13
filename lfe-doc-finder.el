@@ -182,10 +182,9 @@ or all functions if no function characters are given."
                      (lfedoc-string/starts-with (symbol-name x) f))
                    (-map (lambda (x) (car x))
                          (cadadr
-                          (read
-                           (lfedoc-sanitise
-                            (comint-shell-command-to-string
-                             (format "(pp (quote(%s:module_info)))" m))))))))))
+                          (read (lfedoc-sanitise
+                                 (shell-command-to-string (format "lfe -e \"%s\" "
+                                                                  (format "(pp (%s:module_info))" m)))))))))))
 
 (defun lfedoc-modules ()
   "Get list of loaded modules that start with given character(s)."
