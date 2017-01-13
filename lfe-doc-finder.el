@@ -105,7 +105,7 @@
                                (when exports-seen
                                  x))
                              (lfedoc-string-to-lines
-                              (shell-command-to-string
+                              (comint-shell-command-to-string
                                (format "lfe -e \"(m (quote %s))\""
                                        module)))))))))))
 
@@ -117,10 +117,14 @@
         (-map 'lfedoc-split-string-on-spaces
               (cdr (butlast
                     (lfedoc-string-to-lines
-                     (shell-command-to-string (format "lfe -e \"%s\" "
+                     (comint-shell-command-to-string (format "lfe -e \"%s\" "
                                                       "(m)")))))))
   (princ "Modules have been refreshed.")
   lfedoc-global-loaded-modules)
+
+(defun comint-shell-command-to-string (s)
+  "Execute S in LFE shell and get the result."
+  (shell-command-to-string s))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -163,7 +167,7 @@ or all functions if no function characters are given."
                    (-map (lambda (x) (car x))
                          (cadadr
                           (read (lfedoc-sanitise
-                                 (shell-command-to-string (format "lfe -e \"%s\" "
+                                 (comint-shell-command-to-string (format "lfe -e \"%s\" "
                                                                   (format "(pp (%s:module_info))" m)))))))))))
 
 (defun lfedoc-modules ()
