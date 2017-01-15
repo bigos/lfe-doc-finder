@@ -105,8 +105,8 @@
                                (when exports-seen
                                  x))
                              (lfedoc-string-to-lines
-                              (comint-shell-command-to-string
-                               (format "(m (quote %s))"
+                              (shell-command-to-string
+                               (format "lfe -e \"(m (quote %s))\""
                                        module)))))))))))
 
 ;;; You need to run it after every reload of this file.
@@ -117,35 +117,10 @@
         (-map 'lfedoc-split-string-on-spaces
               (cdr (butlast
                     (lfedoc-string-to-lines
-                     (comint-shell-command-to-string "(m)"))))))
+                     (shell-command-to-string (format "lfe -e \"%s\" "
+                                                      "(m)")))))))
   (princ "Modules have been refreshed.")
   lfedoc-global-loaded-modules)
-
-(defvar comint-output-result)
-
-(add-hook #'comint-output-filter-functions #'get-the-result)
-
-(defun get-the-result (s)
-  "Get the sanitised reult string S."
-  (setq comint-output-result
-        (substring
-         (replace-regexp-in-string
-                     "" ""
-                     (substring-no-properties s 0)
-                     0 (- 0 16)))))
-
-(defun comint-shell-command-to-string (s)
-  "Execute S in LFE shell and get the result string."
-  (let* ((process-buffer (make-comint-in-buffer "Inferior LFE" "*inferior-lfe*" "~/Programming/lfe/bin/lfe"))
-         (p (get-buffer-process process-buffer)))
-    (comint-simple-send p s)
-    (sleep-for 0.25)
-    comint-output-result))
-
-
-;; (load "~/Programming/lfe-doc-finder/lfe-doc-finder.el")
-;; in scratch buffer evaluate (lfedoc-test-all)
-;; (pp (comint-shell-command-to-string "(pp (m))"))
 
 ;;; ----------------------------------------------------------------------------
 
@@ -178,7 +153,6 @@ or all functions if no function characters are given."
               t))
           (lfedoc-query-module-functions (nth 0 call-struct)))))))
 
-;; (lfedoc-module-functions-2 "io" "f")
 (defun lfedoc-module-functions-2 (m f)
   "Get a list of functions exported from the module M that start with F."
   ;; all module functions if F is an empty string
